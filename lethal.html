@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile Page Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin:0;
+    font-family:'Space Grotesk', sans-serif;
+    background:#000;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+  }
+
+  .box {
+    text-align:center;
+    max-width:400px;
+  }
+
+  input {
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    background:#111;
+    border:1px solid #333;
+    color:#fff;
+    border-radius:8px;
+  }
+
+  button {
+    padding:10px 20px;
+    background:#fff;
+    color:#000;
+    border:none;
+    border-radius:20px;
+    cursor:pointer;
+  }
+
+  a.generated {
+    display:block;
+    margin-top:20px;
+    color:#0af;
+    word-break:break-all;
+  }
+</style>
+</head>
+<body>
+
+<div class="box" id="app">
+  <h2>Create your page</h2>
+  <input id="name" placeholder="your name">
+  <input id="bio" placeholder="your bio">
+  <input id="github" placeholder="github link">
+  <button onclick="generate()">Generate Link</button>
+  <a class="generated" id="link"></a>
+</div>
+
+<script>
+function generate() {
+  const name = encodeURIComponent(document.getElementById('name').value);
+  const bio = encodeURIComponent(document.getElementById('bio').value);
+  const github = encodeURIComponent(document.getElementById('github').value);
+
+  const url = `${window.location.origin}${window.location.pathname}?name=${name}&bio=${bio}&github=${github}`;
+  const linkEl = document.getElementById('link');
+  linkEl.href = url;
+  linkEl.innerText = url;
+}
+
+// If URL has params → show profile instead of form
+const params = new URLSearchParams(window.location.search);
+if (params.get('name')) {
+  document.body.innerHTML = `
+    <div style="text-align:center">
+      <h1 style="font-size:60px; text-shadow:0 0 10px #fff">${params.get('name')}</h1>
+      <p style="color:#aaa">${params.get('bio') || ''}</p>
+      <a href="${params.get('github') || '#'}" style="color:#fff; border:1px solid #fff; padding:10px 20px; border-radius:20px; text-decoration:none">GitHub</a>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
