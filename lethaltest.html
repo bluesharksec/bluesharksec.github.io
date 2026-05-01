@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Space Grotesk',sans-serif;
+  background:#000;
+  color:#fff;
+  overflow:hidden;
+}
+
+canvas{position:fixed;top:0;left:0;z-index:-1}
+
+.center{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  width:90%;max-width:420px;
+}
+
+h1{
+  font-size:52px;
+  text-shadow:0 0 10px #fff;
+}
+
+p{color:#aaa;margin:10px 0 20px}
+
+input{
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  background:#111;
+  border:1px solid #333;
+  color:#fff;
+  border-radius:8px;
+}
+
+button{
+  margin-top:10px;
+  padding:10px 20px;
+  border-radius:20px;
+  border:1px solid #fff;
+  background:transparent;
+  color:#fff;
+  cursor:pointer;
+}
+
+button:hover{background:#fff;color:#000}
+
+.links a{
+  display:block;
+  margin:8px auto;
+  padding:10px;
+  border:1px solid #fff;
+  border-radius:20px;
+  text-decoration:none;
+  color:#fff;
+  width:200px;
+}
+
+.generated{
+  display:block;
+  margin-top:15px;
+  font-size:12px;
+  color:#0af;
+  word-break:break-all;
+}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="center" id="app">
+  <h1>create</h1>
+  <p>make your page</p>
+
+  <input id="name" placeholder="name">
+  <input id="bio" placeholder="bio">
+
+  <div id="linksContainer">
+    <input class="link" placeholder="link (https://...)">
+  </div>
+
+  <button onclick="addLink()">+ add link</button>
+  <button onclick="generate()">generate</button>
+
+  <a id="output" class="generated"></a>
+</div>
+
+<script>
+// simple particles (fixed bug version)
+const canvas=document.getElementById('bg');
+const ctx=canvas.getContext('2d');
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
+resize();
+addEventListener('resize',resize);
+
+let particles=Array.from({length:80},()=>({
+  x:Math.random()*canvas.width,
+  y:Math.random()*canvas.height,
+  vx:(Math.random()-.5)*0.3,
+  vy:(Math.random()-.5)*0.3
+}));
+
+function loop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>canvas.width)p.vx*=-1;
+    if(p.y<0||p.y>canvas.height)p.vy*=-1;
+    ctx.fillStyle='white';
+    ctx.fillRect(p.x,p.y,1.5,1.5);
+  });
+  requestAnimationFrame(loop);
+}
+loop();
+
+// add multiple links
+function addLink(){
+  const input=document.createElement('input');
+  input.placeholder='link (https://...)';
+  input.className='link';
+  document.getElementById('linksContainer').appendChild(input);
+}
+
+// generate URL
+function generate(){
+  const name=encodeURIComponent(document.getElementById('name').value);
+  const bio=encodeURIComponent(document.getElementById('bio').value);
+
+  const links=[...document.querySelectorAll('.link')]
+    .map(i=>i.value)
+    .filter(v=>v)
+    .map(v=>encodeURIComponent(v))
+    .join(',');
+
+  const url=`${location.origin}${location.pathname}?name=${name}&bio=${bio}&links=${links}`;
+
+  const out=document.getElementById('output');
+  out.href=url;
+  out.innerText=url;
+}
+
+// render profile
+const params=new URLSearchParams(location.search);
+if(params.get('name')){
+  const name=params.get('name');
+  const bio=params.get('bio');
+  const links=(params.get('links')||'').split(',').filter(x=>x);
+
+  document.body.innerHTML=`
+  <canvas id="bg"></canvas>
+  <div class="center">
+    <h1>${name}</h1>
+    <p>${bio||''}</p>
+    <div class="links">
+      ${links.map(l=>`<a href="${decodeURIComponent(l)}" target="_blank">${decodeURIComponent(l)}</a>`).join('')}
+    </div>
+  </div>`;
+
+  // restart particles
+  const canvas=document.getElementById('bg');
+  const ctx=canvas.getContext('2d');
+  function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
+  resize();addEventListener('resize',resize);
+  let particles=Array.from({length:80},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*0.3,vy:(Math.random()-.5)*0.3}));
+  function loop(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>canvas.width)p.vx*=-1;
+      if(p.y<0||p.y>canvas.height)p.vy*=-1;
+      ctx.fillStyle='white';
+      ctx.fillRect(p.x,p.y,1.5,1.5);
+    });
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+</script>
+
+</body>
+</html>
