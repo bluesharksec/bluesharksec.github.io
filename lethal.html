@@ -1,89 +1,4548 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile Page Generator</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VYRO — your identity, your space.</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
 <style>
-  body {
-    margin:0;
-    font-family:'Space Grotesk', sans-serif;
-    background:#000;
-    color:#fff;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-  }
+:root{
+ --bg:#06070b;
+ --panel:rgba(15,17,25,.82);
+ --panel2:rgba(255,255,255,.045);
+ --line:rgba(255,255,255,.09);
+ --text:#f7f7fb;
+ --muted:#9294a3;
+ --accent:#8b5cf6;
+ --accent2:#22d3ee;
+ --good:#4ade80;
+ --bad:#fb7185;
+ --warn:#fbbf24;
+ --shadow:0 30px 90px rgba(0,0,0,.55);
+ --r:22px
+}
 
-  .box {
-    text-align:center;
-    max-width:400px;
-  }
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0
+}
 
-  input {
-    width:100%;
-    padding:10px;
-    margin:10px 0;
-    background:#111;
-    border:1px solid #333;
-    color:#fff;
-    border-radius:8px;
-  }
+html{
+ scroll-behavior:smooth
+}
 
-  button {
-    padding:10px 20px;
-    background:#fff;
-    color:#000;
-    border:none;
-    border-radius:20px;
-    cursor:pointer;
-  }
+body{
+ font-family:"DM Sans",sans-serif;
+ background:var(--bg);
+ color:var(--text);
+ min-height:100vh;
+ overflow-x:hidden
+}
 
-  a.generated {
-    display:block;
-    margin-top:20px;
-    color:#0af;
-    word-break:break-all;
-  }
+button,input,textarea,select{
+ font:inherit
+}
+
+button{
+ cursor:pointer
+}
+
+.hidden{
+ display:none!important
+}
+
+#bg{
+ position:fixed;
+ inset:0;
+ width:100%;
+ height:100%;
+ z-index:-5
+}
+
+.aurora{
+ position:fixed;
+ inset:-20%;
+ z-index:-4;
+ pointer-events:none;
+ background:
+ radial-gradient(circle at 20% 20%,color-mix(in srgb,var(--accent) 20%,transparent),transparent 32%),
+ radial-gradient(circle at 80% 70%,color-mix(in srgb,var(--accent2) 13%,transparent),transparent 28%);
+ filter:blur(50px);
+ animation:aurora 12s ease-in-out infinite alternate
+}
+
+@keyframes aurora{
+ to{
+  transform:translate(4%,-3%) scale(1.08)
+ }
+}
+
+@keyframes up{
+ from{
+  opacity:0;
+  transform:translateY(18px)
+ }
+ to{
+  opacity:1;
+  transform:none
+ }
+}
+
+@keyframes pulse{
+ 50%{
+  box-shadow:0 0 0 8px rgba(139,92,246,0)
+ }
+}
+
+@keyframes float{
+ 0%,100%{transform:translateY(0)}
+ 50%{transform:translateY(-6px)}
+}
+
+@keyframes shimmer{
+ 0%{background-position:-500px 0}
+ 100%{background-position:500px 0}
+}
+
+@keyframes spin{
+ to{transform:rotate(360deg)}
+}
+
+::-webkit-scrollbar{
+ width:8px
+}
+
+::-webkit-scrollbar-thumb{
+ background:#292a38;
+ border-radius:99px
+}
+
+.wrap{
+ width:min(1200px,calc(100% - 28px));
+ margin:auto
+}
+
+.glass{
+ background:var(--panel);
+ border:1px solid var(--line);
+ backdrop-filter:blur(26px);
+ -webkit-backdrop-filter:blur(26px);
+ box-shadow:var(--shadow)
+}
+
+.topbar{
+ position:sticky;
+ top:0;
+ z-index:100;
+ border-bottom:1px solid var(--line);
+ background:rgba(7,7,11,.72);
+ backdrop-filter:blur(20px)
+}
+
+.nav{
+ height:72px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between
+}
+
+.brand{
+ font:700 24px "Space Grotesk";
+ letter-spacing:-1px
+}
+
+.brand b{
+ color:var(--accent)
+}
+
+.nav-actions{
+ display:flex;
+ gap:8px;
+ align-items:center
+}
+
+.btn{
+ border:1px solid var(--line);
+ background:var(--panel2);
+ color:var(--text);
+ padding:11px 16px;
+ border-radius:12px;
+ transition:.18s;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ gap:8px
+}
+
+.btn:hover{
+ transform:translateY(-2px);
+ border-color:rgba(255,255,255,.2);
+ background:rgba(255,255,255,.07)
+}
+
+.btn.primary{
+ background:var(--accent);
+ border-color:transparent;
+ box-shadow:0 10px 30px color-mix(in srgb,var(--accent) 28%,transparent)
+}
+
+.btn.primary:hover{
+ filter:brightness(1.08)
+}
+
+.btn.small{
+ padding:8px 11px;
+ font-size:13px
+}
+
+.btn.iconbtn{
+ width:40px;
+ height:40px;
+ padding:0
+}
+
+.btn.danger{
+ color:#fda4af
+}
+
+.btn.success{
+ color:#86efac
+}
+
+.btn.warn{
+ color:#fcd34d
+}
+
+#app{
+ min-height:calc(100vh - 72px)
+}
+
+.screen{
+ animation:up .45s ease both
+}
+
+.landing{
+ min-height:calc(100vh - 72px);
+ display:grid;
+ place-items:center;
+ padding:70px 0
+}
+
+.hero{
+ text-align:center;
+ max-width:900px
+}
+
+.eyebrow{
+ display:inline-flex;
+ gap:8px;
+ align-items:center;
+ padding:7px 12px;
+ border:1px solid var(--line);
+ border-radius:999px;
+ color:#c4c5d0;
+ background:rgba(255,255,255,.035);
+ font-size:12px;
+ margin-bottom:22px
+}
+
+.dot{
+ width:7px;
+ height:7px;
+ background:var(--good);
+ border-radius:50%;
+ box-shadow:0 0 18px var(--good)
+}
+
+h1{
+ font:700 clamp(48px,8vw,92px)/.94 "Space Grotesk";
+ letter-spacing:-5px
+}
+
+h1 span{
+ background:linear-gradient(120deg,var(--accent),var(--accent2));
+ -webkit-background-clip:text;
+ color:transparent
+}
+
+.hero p{
+ color:var(--muted);
+ font-size:17px;
+ line-height:1.7;
+ max-width:620px;
+ margin:24px auto 30px
+}
+
+.hero-actions{
+ display:flex;
+ justify-content:center;
+ gap:10px;
+ flex-wrap:wrap
+}
+
+.feature-grid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:12px;
+ margin-top:65px
+}
+
+.feature{
+ padding:20px;
+ border-radius:18px;
+ text-align:left
+}
+
+.feature i{
+ font-size:18px;
+ color:var(--accent);
+ margin-bottom:15px
+}
+
+.feature h3{
+ font-size:14px;
+ margin-bottom:6px
+}
+
+.feature p{
+ font-size:12px;
+ margin:0;
+ line-height:1.5
+}
+
+.card{
+ border-radius:var(--r);
+ padding:26px
+}
+
+.auth{
+ width:min(460px,100%);
+ margin:70px auto
+}
+
+.center{
+ text-align:center
+}
+
+.logo-mark{
+ width:66px;
+ height:66px;
+ margin:0 auto 16px;
+ border-radius:20px;
+ display:grid;
+ place-items:center;
+ background:linear-gradient(135deg,var(--accent),var(--accent2));
+ box-shadow:0 15px 50px color-mix(in srgb,var(--accent) 28%,transparent);
+ font:700 25px "Space Grotesk"
+}
+
+.muted{
+ color:var(--muted)
+}
+
+.sub{
+ font-size:13px;
+ line-height:1.6;
+ color:var(--muted)
+}
+
+label{
+ display:block;
+ font-size:11px;
+ text-transform:uppercase;
+ letter-spacing:.12em;
+ color:#9fa1ae;
+ margin:18px 0 7px
+}
+
+input,textarea,select{
+ width:100%;
+ border:1px solid var(--line);
+ background:rgba(255,255,255,.035);
+ color:var(--text);
+ padding:12px 14px;
+ border-radius:12px;
+ outline:none;
+ transition:.18s
+}
+
+textarea{
+ resize:vertical;
+ min-height:90px
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+ border-color:color-mix(in srgb,var(--accent) 60%,white);
+ box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 12%,transparent)
+}
+
+select option{
+ background:#15151e
+}
+
+.field-row{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:10px
+}
+
+.status{
+ min-height:20px;
+ text-align:center;
+ font-size:13px;
+ margin-top:10px
+}
+
+.ok{
+ color:var(--good)
+}
+
+.bad{
+ color:var(--bad)
+}
+
+.claim-ref{
+ padding:12px;
+ border:1px dashed var(--line);
+ border-radius:13px;
+ margin-top:12px;
+ background:rgba(139,92,246,.05)
+}
+
+.dash{
+ display:grid;
+ grid-template-columns:235px 1fr;
+ gap:18px;
+ padding:26px 0 80px
+}
+
+.side{
+ height:max-content;
+ position:sticky;
+ top:90px;
+ padding:12px
+}
+
+.side button{
+ width:100%;
+ justify-content:flex-start;
+ background:transparent;
+ border:0;
+ color:var(--muted);
+ padding:11px 12px;
+ border-radius:10px;
+ margin:2px 0
+}
+
+.side button:hover,
+.side button.active{
+ background:rgba(255,255,255,.06);
+ color:var(--text)
+}
+
+.side button.admin{
+ color:#fbbf24
+}
+
+.side .group{
+ padding:12px 12px 6px;
+ font-size:10px;
+ text-transform:uppercase;
+ letter-spacing:.14em;
+ color:#626474
+}
+
+.content{
+ min-width:0
+}
+
+.dash-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:12px;
+ margin-bottom:16px
+}
+
+.dash-head h2{
+ font:700 25px "Space Grotesk"
+}
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:12px;
+ margin-bottom:14px
+}
+
+.stat{
+ padding:18px;
+ border-radius:18px
+}
+
+.stat small{
+ color:var(--muted);
+ font-size:11px;
+ text-transform:uppercase;
+ letter-spacing:.1em
+}
+
+.stat strong{
+ display:block;
+ font:700 27px "Space Grotesk";
+ margin-top:8px
+}
+
+.grid2{
+ display:grid;
+ grid-template-columns:1.3fr .7fr;
+ gap:14px
+}
+
+.section{
+ padding:20px;
+ border-radius:20px;
+ margin-bottom:14px
+}
+
+.section-title{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:15px
+}
+
+.section-title h3{
+ font-size:15px
+}
+
+.section-title span{
+ font-size:11px;
+ color:var(--muted)
+}
+
+.avatar-row{
+ display:flex;
+ align-items:center;
+ gap:16px
+}
+
+.avatar{
+ width:78px;
+ height:78px;
+ border-radius:50%;
+ object-fit:cover;
+ border:3px solid rgba(255,255,255,.12);
+ background:#181923
+}
+
+.avatar.sm{
+ width:44px;
+ height:44px
+}
+
+.upload{
+ padding:10px 13px;
+ border:1px dashed var(--line);
+ border-radius:11px;
+ color:var(--muted);
+ font-size:12px;
+ cursor:pointer
+}
+
+.swatches{
+ display:flex;
+ flex-wrap:wrap;
+ gap:9px
+}
+
+.swatch{
+ width:34px;
+ height:34px;
+ border-radius:50%;
+ border:2px solid transparent;
+ cursor:pointer
+}
+
+.swatch.active{
+ border-color:#fff;
+ box-shadow:0 0 0 3px rgba(255,255,255,.1)
+}
+
+.row{
+ display:flex;
+ gap:8px;
+ align-items:center
+}
+
+.link-row{
+ display:grid;
+ grid-template-columns:.7fr 1.3fr 40px;
+ gap:7px;
+ margin-bottom:7px
+}
+
+.badge-list{
+ display:flex;
+ flex-wrap:wrap;
+ gap:8px
+}
+
+.badge{
+ display:inline-flex;
+ align-items:center;
+ gap:6px;
+ padding:7px 9px;
+ border-radius:999px;
+ background:rgba(255,255,255,.05);
+ border:1px solid var(--line);
+ font-size:11px
+}
+
+.badge i{
+ color:var(--accent)
+}
+
+.badge.gold i{
+ color:#fbbf24
+}
+
+.badge.green i{
+ color:#4ade80
+}
+
+.badge.red i{
+ color:#fb7185
+}
+
+.badge.cyan i{
+ color:#22d3ee
+}
+
+.badge.admin-badge{
+ border-color:rgba(251,191,36,.35);
+ background:rgba(251,191,36,.08)
+}
+
+.progress{
+ height:8px;
+ background:rgba(255,255,255,.06);
+ border-radius:99px;
+ overflow:hidden
+}
+
+.progress i{
+ display:block;
+ height:100%;
+ background:linear-gradient(90deg,var(--accent),var(--accent2));
+ border-radius:99px
+}
+
+.refcode{
+ font:700 22px "Space Grotesk";
+ letter-spacing:.08em
+}
+
+.activity{
+ display:grid;
+ gap:10px
+}
+
+.activity div{
+ display:flex;
+ gap:10px;
+ align-items:center;
+ padding:11px;
+ border-radius:11px;
+ background:rgba(255,255,255,.035);
+ font-size:12px
+}
+
+.activity i{
+ color:var(--accent)
+}
+
+.profile-stage{
+ min-height:calc(100vh - 72px);
+ display:grid;
+ place-items:center;
+ padding:55px 14px
+}
+
+.profile-card{
+ width:min(510px,100%);
+ padding:30px;
+ border-radius:30px;
+ text-align:center;
+ position:relative;
+ overflow:hidden
+}
+
+.profile-card:before{
+ content:"";
+ position:absolute;
+ inset:0;
+ background:radial-gradient(circle at 50% 0,color-mix(in srgb,var(--accent) 18%,transparent),transparent 42%);
+ pointer-events:none
+}
+
+.profile-banner{
+ position:absolute;
+ inset:0 0 auto 0;
+ height:145px;
+ opacity:.65;
+ background-size:cover;
+ background-position:center;
+ mask-image:linear-gradient(#000,transparent)
+}
+
+.profile-inner{
+ position:relative;
+ z-index:2
+}
+
+.profile-avatar{
+ width:108px;
+ height:108px;
+ border-radius:50%;
+ object-fit:cover;
+ border:4px solid rgba(255,255,255,.12);
+ box-shadow:0 15px 50px rgba(0,0,0,.4);
+ margin:40px auto 14px;
+ display:block
+}
+
+.profile-avatar.glow{
+ box-shadow:
+ 0 0 0 4px rgba(255,255,255,.08),
+ 0 0 45px color-mix(in srgb,var(--accent) 55%,transparent),
+ 0 15px 50px rgba(0,0,0,.4)
+}
+
+.profile-name{
+ font:700 29px "Space Grotesk";
+ letter-spacing:-1px
+}
+
+.handle{
+ color:var(--muted);
+ font-size:12px;
+ margin-top:3px
+}
+
+.profile-status{
+ display:inline-flex;
+ gap:6px;
+ align-items:center;
+ margin-top:8px;
+ padding:5px 9px;
+ border-radius:999px;
+ background:rgba(255,255,255,.045);
+ border:1px solid var(--line);
+ color:#b8bac8;
+ font-size:11px
+}
+
+.profile-bio{
+ color:#b7b8c4;
+ font-size:14px;
+ line-height:1.65;
+ margin:15px auto 18px;
+ max-width:380px
+}
+
+.badges{
+ display:flex;
+ justify-content:center;
+ gap:6px;
+ flex-wrap:wrap;
+ margin-bottom:16px
+}
+
+.profile-links{
+ display:grid;
+ gap:9px
+}
+
+.profile-links a{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ gap:9px;
+ padding:14px;
+ border-radius:14px;
+ border:1px solid var(--line);
+ background:rgba(255,255,255,.045);
+ color:var(--text);
+ text-decoration:none;
+ transition:.2s
+}
+
+.profile-links a:hover{
+ transform:translateY(-2px);
+ background:rgba(255,255,255,.075);
+ border-color:rgba(255,255,255,.18)
+}
+
+.music{
+ margin:16px 0;
+ padding:12px;
+ border:1px solid var(--line);
+ background:rgba(255,255,255,.035);
+ border-radius:15px;
+ text-align:left
+}
+
+.music-top{
+ display:flex;
+ align-items:center;
+ gap:10px
+}
+
+.album{
+ width:42px;
+ height:42px;
+ border-radius:11px;
+ display:grid;
+ place-items:center;
+ background:linear-gradient(135deg,var(--accent),var(--accent2));
+ flex:none
+}
+
+.track{
+ min-width:0;
+ flex:1
+}
+
+.track b,
+.track span{
+ display:block;
+ white-space:nowrap;
+ overflow:hidden;
+ text-overflow:ellipsis
+}
+
+.track b{
+ font-size:12px
+}
+
+.track span{
+ font-size:10px;
+ color:var(--muted);
+ margin-top:2px
+}
+
+.music input[type=range]{
+ padding:0;
+ margin-top:10px;
+ height:3px
+}
+
+.profile-footer{
+ margin-top:20px;
+ color:#676978;
+ font-size:10px
+}
+
+.views{
+ display:flex;
+ justify-content:center;
+ gap:14px;
+ color:#777987;
+ font-size:11px;
+ margin-top:14px
+}
+
+.toast{
+ position:fixed;
+ right:18px;
+ bottom:18px;
+ z-index:999;
+ padding:13px 15px;
+ border-radius:12px;
+ background:#171821;
+ border:1px solid var(--line);
+ box-shadow:var(--shadow);
+ font-size:12px;
+ animation:up .25s
+}
+
+.modal{
+ position:fixed;
+ inset:0;
+ z-index:500;
+ display:grid;
+ place-items:center;
+ padding:18px;
+ background:rgba(0,0,0,.72);
+ backdrop-filter:blur(12px)
+}
+
+.modal-card{
+ width:min(500px,100%);
+ max-height:90vh;
+ overflow:auto;
+ padding:24px;
+ border-radius:24px
+}
+
+.modal-head{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-bottom:18px
+}
+
+.modal-head h2{
+ font:700 22px "Space Grotesk"
+}
+
+.admin-header{
+ padding:18px;
+ border-radius:18px;
+ margin-bottom:14px;
+ background:
+ linear-gradient(135deg,
+ rgba(251,191,36,.12),
+ rgba(139,92,246,.08));
+ border:1px solid rgba(251,191,36,.2)
+}
+
+.admin-grid{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:14px
+}
+
+.user-result{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:10px;
+ padding:12px;
+ border:1px solid var(--line);
+ border-radius:13px;
+ background:rgba(255,255,255,.035);
+ margin-top:8px
+}
+
+.user-result-main{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ min-width:0
+}
+
+.user-result img{
+ width:38px;
+ height:38px;
+ border-radius:50%;
+ object-fit:cover
+}
+
+.user-result-name{
+ min-width:0
+}
+
+.user-result-name b,
+.user-result-name span{
+ display:block;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap
+}
+
+.user-result-name span{
+ color:var(--muted);
+ font-size:11px
+}
+
+.custom-feature{
+ padding:13px;
+ border-radius:13px;
+ border:1px solid var(--line);
+ background:rgba(255,255,255,.035);
+ margin-bottom:8px
+}
+
+.custom-feature strong{
+ display:block;
+ font-size:12px
+}
+
+.custom-feature span{
+ display:block;
+ color:var(--muted);
+ font-size:11px;
+ margin-top:3px
+}
+
+@media(max-width:900px){
+ .feature-grid{
+  grid-template-columns:1fr 1fr
+ }
+
+ .dash{
+  grid-template-columns:1fr
+ }
+
+ .side{
+  position:static;
+  display:flex;
+  overflow:auto;
+  gap:5px
+ }
+
+ .side .group{
+  display:none
+ }
+
+ .side button{
+  width:auto;
+  white-space:nowrap
+ }
+
+ .stats{
+  grid-template-columns:1fr 1fr
+ }
+
+ .grid2{
+  grid-template-columns:1fr
+ }
+
+ .admin-grid{
+  grid-template-columns:1fr
+ }
+}
+
+@media(max-width:540px){
+ .nav{
+  height:62px
+ }
+
+ .feature-grid{
+  grid-template-columns:1fr
+ }
+
+ .field-row{
+  grid-template-columns:1fr
+ }
+
+ h1{
+  letter-spacing:-3px
+ }
+
+ .card{
+  padding:20px
+ }
+
+ .dash{
+  padding-top:14px
+ }
+
+ .stats{
+  gap:8px
+ }
+
+ .stat strong{
+  font-size:22px
+ }
+
+ .link-row{
+  grid-template-columns:1fr 1fr 38px
+ }
+
+ .profile-card{
+  padding:24px
+ }
+}
 </style>
 </head>
+
 <body>
 
-<div class="box" id="app">
-  <h2>Create your page</h2>
-  <input id="name" placeholder="your name">
-  <input id="bio" placeholder="your bio">
-  <input id="github" placeholder="github link">
-  <button onclick="generate()">Generate Link</button>
-  <a class="generated" id="link"></a>
-</div>
+<canvas id="bg"></canvas>
+<div class="aurora"></div>
 
-<script>
-function generate() {
-  const name = encodeURIComponent(document.getElementById('name').value);
-  const bio = encodeURIComponent(document.getElementById('bio').value);
-  const github = encodeURIComponent(document.getElementById('github').value);
+<header class="topbar">
+ <div class="wrap nav">
+  <div class="brand">VYR<span style="color:var(--accent)">O</span></div>
+  <div class="nav-actions" id="navActions"></div>
+ </div>
+</header>
 
-  const url = `${window.location.origin}${window.location.pathname}?name=${name}&bio=${bio}&github=${github}`;
-  const linkEl = document.getElementById('link');
-  linkEl.href = url;
-  linkEl.innerText = url;
+<main id="app"></main>
+<div id="toastRoot"></div>
+
+<script type="module">
+
+import {initializeApp}
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+import {
+ getFirestore,
+ doc,
+ setDoc,
+ getDoc,
+ collection,
+ query,
+ where,
+ getDocs,
+ increment
+}
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+
+/* =========================
+   FIREBASE
+========================= */
+
+const firebaseConfig={
+ apiKey:"AIzaSyCsWG4bQeRA8SvR6BQKu-l4DGsfk22iqHg",
+ authDomain:"bluesharklethal.firebaseapp.com",
+ projectId:"bluesharklethal"
+};
+
+let db=null;
+
+try{
+ db=getFirestore(initializeApp(firebaseConfig));
+}catch(e){
+ console.error("Firebase initialization failed",e);
 }
 
-// If URL has params → show profile instead of form
-const params = new URLSearchParams(window.location.search);
-if (params.get('name')) {
-  document.body.innerHTML = `
-    <div style="text-align:center">
-      <h1 style="font-size:60px; text-shadow:0 0 10px #fff">${params.get('name')}</h1>
-      <p style="color:#aaa">${params.get('bio') || ''}</p>
-      <a href="${params.get('github') || '#'}" style="color:#fff; border:1px solid #fff; padding:10px 20px; border-radius:20px; text-decoration:none">GitHub</a>
-    </div>
+function requireDb(){
+ if(!db){
+  toast("Firebase is unavailable.");
+  throw new Error("Firebase unavailable");
+ }
+ return db;
+}
+
+
+/* =========================
+   STATE
+========================= */
+
+const app=document.getElementById("app");
+const nav=document.getElementById("navActions");
+
+let user=null;
+
+try{
+ user=JSON.parse(localStorage.getItem("discordUser")||"null");
+}catch{
+ localStorage.removeItem("discordUser");
+}
+
+let adminSession=false;
+
+
+/* =========================
+   HELPERS
+========================= */
+
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({
+ "&":"&amp;",
+ "<":"&lt;",
+ ">":"&gt;",
+ '"':"&quot;",
+ "'":"&#39;"
+}[m]));
+
+function toast(message){
+ const d=document.createElement("div");
+ d.className="toast";
+ d.textContent=message;
+
+ document.getElementById("toastRoot").appendChild(d);
+
+ setTimeout(()=>d.remove(),2600);
+}
+
+function icon(url){
+ url=(url||"").toLowerCase();
+
+ if(url.includes("discord"))return"fa-brands fa-discord";
+ if(url.includes("github"))return"fa-brands fa-github";
+ if(url.includes("youtube"))return"fa-brands fa-youtube";
+ if(url.includes("instagram"))return"fa-brands fa-instagram";
+ if(url.includes("tiktok"))return"fa-brands fa-tiktok";
+ if(url.includes("spotify"))return"fa-brands fa-spotify";
+ if(url.includes("x.com")||url.includes("twitter"))return"fa-brands fa-x-twitter";
+ if(url.includes("twitch"))return"fa-brands fa-twitch";
+
+ return"fa-solid fa-link";
+}
+
+
+/* =========================
+   THEMES
+========================= */
+
+const themes=[
+ {id:"midnight",name:"Midnight",a:"#8b5cf6",b:"#22d3ee",bg:"#07070b"},
+ {id:"aurora",name:"Aurora",a:"#22c55e",b:"#06b6d4",bg:"#04100d"},
+ {id:"crimson",name:"Crimson",a:"#f43f5e",b:"#fb923c",bg:"#100508"},
+ {id:"ocean",name:"Ocean",a:"#38bdf8",b:"#6366f1",bg:"#030b14"},
+ {id:"gold",name:"Gold",a:"#f59e0b",b:"#fde047",bg:"#100c03"},
+ {id:"sakura",name:"Sakura",a:"#f472b6",b:"#c084fc",bg:"#10050e"},
+ {id:"emerald",name:"Emerald",a:"#34d399",b:"#a3e635",bg:"#03100a"},
+ {id:"amoled",name:"AMOLED",a:"#fff",b:"#888",bg:"#000"},
+ {id:"royal",name:"Royal",a:"#6366f1",b:"#a855f7",bg:"#070414"},
+ {id:"ice",name:"Ice",a:"#67e8f9",b:"#818cf8",bg:"#030a12"},
+ {id:"sunset",name:"Sunset",a:"#fb7185",b:"#f59e0b",bg:"#100604"},
+ {id:"matrix",name:"Matrix",a:"#22c55e",b:"#84cc16",bg:"#020803"}
+];
+
+function applyTheme(id){
+ const t=themes.find(x=>x.id===id)||themes[0];
+
+ document.documentElement.style.setProperty("--accent",t.a);
+ document.documentElement.style.setProperty("--accent2",t.b);
+ document.documentElement.style.setProperty("--bg",t.bg);
+}
+
+
+/* =========================
+   BADGES
+========================= */
+
+const BADGES={
+ welcome:["fa-hand-wave","Welcome",""],
+ verified:["fa-circle-check","Verified","cyan"],
+ supporter:["fa-heart","Supporter","red"],
+ developer:["fa-code","Developer","cyan"],
+ referrer:["fa-user-plus","Recruiter","green"],
+ founder:["fa-crown","Founder","gold"],
+ admin:["fa-shield-halved","Admin","admin-badge"],
+ vip:["fa-gem","VIP","gold"],
+ early:["fa-clock","Early User",""],
+ creator:["fa-wand-magic-sparkles","Creator",""],
+ legend:["fa-fire","Legend","red"],
+ star:["fa-star","Star","gold"],
+ music:["fa-music","Music Lover",""],
+ popular:["fa-bolt","Popular","gold"],
+ custom:["fa-sparkles","Custom","cyan"]
+};
+
+function badgeHTML(d){
+ const badges=d.badges||["welcome"];
+
+ return badges.map(id=>{
+  const b=BADGES[id]||["fa-star",id,""];
+
+  return `
+   <span class="badge ${b[2]||""}">
+    <i class="fa-solid ${b[0]}"></i>
+    ${esc(b[1])}
+   </span>
   `;
+ }).join("");
 }
+
+
+/* =========================
+   LOGIN
+========================= */
+
+function discordLogin(){
+
+ const popup=window.open(
+  "https://biolnk.snutdddee.workers.dev/login",
+  "discord",
+  "width=500,height=700"
+ );
+
+ if(!popup){
+  toast("Allow pop-ups to continue.");
+  return;
+ }
+
+ const fn=async e=>{
+  if(!e.data?.id)return;
+
+  user=e.data;
+
+  localStorage.setItem(
+   "discordUser",
+   JSON.stringify(user)
+  );
+
+  window.removeEventListener("message",fn);
+
+  await afterLogin();
+ };
+
+ window.addEventListener("message",fn);
+}
+
+window.logout=()=>{
+ localStorage.removeItem("discordUser");
+
+ user=null;
+ adminSession=false;
+
+ location.hash="";
+ renderHome();
+};
+
+
+/* =========================
+   NAV
+========================= */
+
+function navBar(){
+
+ if(user){
+
+  nav.innerHTML=`
+   <button class="btn small"
+    onclick="location.hash='#/dashboard'">
+    <i class="fa-solid fa-grid-2"></i>
+    Dashboard
+   </button>
+
+   <button class="btn small danger"
+    onclick="logout()">
+    <i class="fa-solid fa-right-from-bracket"></i>
+   </button>
+  `;
+
+ }else{
+
+  nav.innerHTML=`
+   <button class="btn small primary"
+    onclick="discordLogin()">
+    <i class="fa-brands fa-discord"></i>
+    Sign in
+   </button>
+  `;
+ }
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function renderHome(){
+
+ navBar();
+
+ app.innerHTML=`
+
+ <section class="landing screen">
+  <div class="wrap hero">
+
+   <div class="eyebrow">
+    <span class="dot"></span>
+    the social profile platform
+   </div>
+
+   <h1>
+    Your identity.<br>
+    <span>Your space.</span>
+   </h1>
+
+   <p>
+    Build a profile that actually feels like yours.
+    Music, badges, themes, achievements, effects,
+    referrals and custom cosmetics — all in one place.
+   </p>
+
+   <div class="hero-actions">
+
+    <button class="btn primary"
+     onclick="discordLogin()">
+     <i class="fa-brands fa-discord"></i>
+     Create your VYRO
+    </button>
+
+    <button class="btn"
+     onclick="location.hash='#/demo'">
+     <i class="fa-solid fa-sparkles"></i>
+     Explore a profile
+    </button>
+
+   </div>
+
+   <div class="feature-grid">
+
+    <div class="feature glass">
+     <i class="fa-solid fa-palette"></i>
+     <h3>Deep customisation</h3>
+     <p>
+      Themes, gradients, banners, effects and
+      profile styling.
+     </p>
+    </div>
+
+    <div class="feature glass">
+     <i class="fa-solid fa-music"></i>
+     <h3>Profile music</h3>
+     <p>
+      Give visitors a soundtrack when they
+      open your page.
+     </p>
+    </div>
+
+    <div class="feature glass">
+     <i class="fa-solid fa-award"></i>
+     <h3>Badges & XP</h3>
+     <p>
+      Unlock achievements and cosmetic rewards.
+     </p>
+    </div>
+
+    <div class="feature glass">
+     <i class="fa-solid fa-user-group"></i>
+     <h3>Referral rewards</h3>
+     <p>
+      Invite friends using your personal referral code.
+     </p>
+    </div>
+
+   </div>
+
+  </div>
+ </section>
+ `;
+}
+
+
+/* =========================
+   CLAIM
+========================= */
+
+function claim(){
+
+ navBar();
+
+ const pending=
+  localStorage.getItem("vyroReferral")||"";
+
+ app.innerHTML=`
+
+ <div class="wrap">
+
+  <div class="card glass auth screen">
+
+   <div class="center">
+
+    <div class="logo-mark">V</div>
+
+    <h2 style="font:700 25px 'Space Grotesk'">
+     Claim your identity
+    </h2>
+
+    <p class="sub" style="margin-top:7px">
+     Pick the username people will use to find you.
+    </p>
+
+   </div>
+
+   <label>Username</label>
+
+   <input
+    id="claimName"
+    maxlength="32"
+    placeholder="yourname"
+    autocomplete="off"
+   >
+
+   <div id="claimHint" class="status"></div>
+
+   <label>
+    Referral code
+    <span style="text-transform:none;letter-spacing:0">
+     (optional)
+    </span>
+   </label>
+
+   <input
+    id="ref"
+    maxlength="30"
+    placeholder="e.g. SHARK25"
+    value="${esc(pending)}"
+   >
+
+   <div class="claim-ref">
+    <i class="fa-solid fa-gift"></i>
+    Use a referral code to receive a starter XP bonus.
+   </div>
+
+   <button
+    class="btn primary"
+    id="claimBtn"
+    style="width:100%;margin-top:16px"
+    disabled>
+    Claim username
+   </button>
+
+   <div id="claimOut" class="status"></div>
+
+  </div>
+
+ </div>
+ `;
+
+ const n=document.getElementById("claimName");
+ const h=document.getElementById("claimHint");
+ const b=document.getElementById("claimBtn");
+
+ let timer;
+
+ n.oninput=()=>{
+
+  let v=n.value
+   .toLowerCase()
+   .replace(/[^a-z0-9_-]/g,"");
+
+  n.value=v;
+  b.disabled=true;
+
+  clearTimeout(timer);
+
+  if(!/^[a-z0-9_-]{3,32}$/.test(v)){
+
+   h.textContent=v?
+    "3–32 characters, letters/numbers/_/- only":
+    "";
+
+   h.className="status bad";
+   return;
+  }
+
+  h.textContent="checking…";
+  h.className="status";
+
+  timer=setTimeout(async()=>{
+
+   try{
+
+    const r=await getDocs(
+     query(
+      collection(requireDb(),"users"),
+      where("username","==",v)
+     )
+    );
+
+    if(r.empty){
+
+     h.textContent="✓ username available";
+     h.className="status ok";
+     b.disabled=false;
+
+    }else{
+
+     h.textContent="username is taken";
+     h.className="status bad";
+
+    }
+
+   }catch{
+
+    h.textContent="couldn't check username";
+    h.className="status bad";
+
+   }
+
+  },350);
+ };
+
+
+ b.onclick=async()=>{
+
+  b.disabled=true;
+
+  b.innerHTML=
+   '<i class="fa-solid fa-circle-notch fa-spin"></i> Creating…';
+
+  const username=n.value;
+  const ref=document
+   .getElementById("ref")
+   .value
+   .trim()
+   .toUpperCase();
+
+  try{
+
+   const r=await getDocs(
+    query(
+     collection(requireDb(),"users"),
+     where("username","==",username)
+    )
+   );
+
+   if(!r.empty)
+    throw Error("taken");
+
+   const referralCode=
+    makeCode(username);
+
+   const data={
+
+    username,
+
+    bio:"",
+
+    status:"",
+
+    theme:"midnight",
+
+    pfp:"",
+
+    banner:"",
+
+    ownerId:user.id,
+
+    links:[],
+
+    music:{
+     url:"",
+     title:"",
+     artist:"",
+     autoplay:false,
+     loop:true
+    },
+
+    badges:["welcome"],
+
+    stats:{
+     views:0,
+     likes:0,
+     referrals:0
+    },
+
+    referralCode,
+
+    xp:ref?250:100,
+
+    level:1,
+
+    achievements:[
+     "first-profile"
+    ],
+
+    effects:{
+     particles:true,
+     avatarGlow:true
+    },
+
+    customFeatures:{
+     customCSS:false,
+     animatedName:false,
+     specialCard:false,
+     profileGlow:true
+    },
+
+    createdAt:Date.now()
+
+   };
+
+   await setDoc(
+    doc(requireDb(),"users",user.id),
+    data
+   );
+
+   localStorage.removeItem("vyroReferral");
+
+   if(ref){
+
+    try{
+
+     const q=await getDocs(
+      query(
+       collection(requireDb(),"users"),
+       where("referralCode","==",ref)
+      )
+     );
+
+     if(!q.empty){
+
+      const rd=q.docs[0];
+
+      if(rd.id!==user.id){
+
+       const old=rd.data();
+
+       await setDoc(
+        doc(requireDb(),"users",rd.id),
+        {
+         xp:increment(500),
+         badges:Array.from(
+          new Set([
+           ...(old.badges||[]),
+           "referrer"
+          ])
+         ),
+         stats:{
+          ...(old.stats||{}),
+          referrals:
+           (old.stats?.referrals||0)+1
+         }
+        },
+        {merge:true}
+       );
+
+      }
+
+     }
+
+    }catch(e){
+     console.warn(e);
+    }
+
+   }
+
+   toast("Welcome to VYRO ✦");
+
+   location.hash="#/dashboard";
+
+   dashboard();
+
+  }catch(e){
+
+   document.getElementById("claimOut").textContent=
+    e.message==="taken"
+     ?"Username was just taken."
+     :"Something went wrong.";
+
+   document.getElementById("claimOut").className=
+    "status bad";
+
+   b.disabled=false;
+   b.textContent="Claim username";
+  }
+
+ };
+}
+
+
+function makeCode(n){
+
+ return (
+  n
+   .replace(/[^a-z0-9]/gi,"")
+   .slice(0,8)
+  +
+  "-"
+  +
+  Math.random()
+   .toString(36)
+   .slice(2,6)
+ ).toUpperCase();
+
+}
+
+
+/* =========================
+   LOGIN COMPLETE
+========================= */
+
+async function afterLogin(){
+
+ if(!user){
+  renderHome();
+  return;
+ }
+
+ try{
+
+  const s=await getDoc(
+   doc(requireDb(),"users",user.id)
+  );
+
+  if(
+   s.exists() &&
+   s.data().username
+  ){
+
+   location.hash="#/dashboard";
+   dashboard();
+
+  }else{
+
+   claim();
+
+  }
+
+ }catch{
+
+  toast("Firebase connection failed");
+
+ }
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function dashboard(){
+
+ navBar();
+
+ let d=null;
+
+ app.innerHTML=`
+
+ <div class="wrap dash screen">
+
+  <aside class="side glass">
+
+   <div class="group">Workspace</div>
+
+   <button class="active" data-tab="overview">
+    <i class="fa-solid fa-chart-simple"></i>
+    Overview
+   </button>
+
+   <button data-tab="profile">
+    <i class="fa-solid fa-user"></i>
+    Profile
+   </button>
+
+   <button data-tab="appearance">
+    <i class="fa-solid fa-wand-magic-sparkles"></i>
+    Appearance
+   </button>
+
+   <button data-tab="music">
+    <i class="fa-solid fa-music"></i>
+    Music
+   </button>
+
+   <div class="group">Growth</div>
+
+   <button data-tab="badges">
+    <i class="fa-solid fa-award"></i>
+    Badges
+   </button>
+
+   <button data-tab="referrals">
+    <i class="fa-solid fa-user-group"></i>
+    Referrals
+   </button>
+
+   <button data-tab="analytics">
+    <i class="fa-solid fa-chart-line"></i>
+    Analytics
+   </button>
+
+   <div class="group">Account</div>
+
+   <button data-tab="settings">
+    <i class="fa-solid fa-gear"></i>
+    Settings
+   </button>
+
+   <button onclick="openProfile()">
+    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+    View profile
+   </button>
+
+  </aside>
+
+  <section class="content" id="dashContent"></section>
+
+ </div>
+ `;
+
+
+ getDoc(
+  doc(requireDb(),"users",user.id)
+ ).then(s=>{
+
+  d=s.exists()?s.data():null;
+
+  if(!d){
+   claim();
+   return;
+  }
+
+  applyTheme(d.theme);
+
+  renderTab("overview",d);
+
+ }).catch(()=>{
+
+  document.getElementById("dashContent").innerHTML=
+   '<div class="card glass">Could not load your profile.</div>';
+
+ });
+
+
+ document
+  .querySelector(".side")
+  .addEventListener("click",e=>{
+
+   const b=e.target.closest("[data-tab]");
+
+   if(!b||!d)return;
+
+   document
+    .querySelectorAll(".side button")
+    .forEach(x=>x.classList.remove("active"));
+
+   b.classList.add("active");
+
+   renderTab(
+    b.dataset.tab,
+    d
+   );
+
+  });
+
+}
+
+
+function save(patch){
+
+ return setDoc(
+  doc(requireDb(),"users",user.id),
+  patch,
+  {merge:true}
+ );
+
+}
+
+
+/* =========================
+   TAB ROUTER
+========================= */
+
+function renderTab(tab,d){
+
+ const c=document.getElementById("dashContent");
+
+ if(!c)return;
+
+ const xp=d.xp||0;
+ const level=d.level||1;
+ const next=level*500;
+
+ if(tab==="overview")
+  c.innerHTML=overviewEditor(d);
+
+ if(tab==="profile")
+  c.innerHTML=profileEditor(d);
+
+ if(tab==="appearance")
+  c.innerHTML=appearanceEditor(d);
+
+ if(tab==="music")
+  c.innerHTML=musicEditor(d);
+
+ if(tab==="badges")
+  c.innerHTML=badgesEditor(d);
+
+ if(tab==="referrals")
+  c.innerHTML=referralEditor(d);
+
+ if(tab==="analytics")
+  c.innerHTML=analyticsEditor(d);
+
+ if(tab==="settings")
+  c.innerHTML=settingsEditor(d);
+
+ bindTab(tab,d);
+
+}
+
+
+function overviewEditor(d){
+
+ const xp=d.xp||0;
+ const level=d.level||1;
+ const next=level*500;
+
+ return`
+
+ <div class="dash-head">
+
+  <div>
+   <h2>Welcome back, ${esc(d.username)}</h2>
+   <p class="sub">
+    Manage your page and unlock more cosmetics.
+   </p>
+  </div>
+
+  <button
+   class="btn primary small"
+   onclick="openProfile()">
+   <i class="fa-solid fa-eye"></i>
+   View live page
+  </button>
+
+ </div>
+
+ <div class="stats">
+
+  <div class="stat glass">
+   <small>Profile views</small>
+   <strong>${(d.stats?.views||0).toLocaleString()}</strong>
+  </div>
+
+  <div class="stat glass">
+   <small>Likes</small>
+   <strong>${d.stats?.likes||0}</strong>
+  </div>
+
+  <div class="stat glass">
+   <small>Level</small>
+   <strong>${level}</strong>
+  </div>
+
+  <div class="stat glass">
+   <small>Referrals</small>
+   <strong>${d.stats?.referrals||0}</strong>
+  </div>
+
+ </div>
+
+ <div class="grid2">
+
+  <div class="section glass">
+
+   <div class="section-title">
+    <h3>XP progress</h3>
+    <span>${xp.toLocaleString()} / ${next.toLocaleString()} XP</span>
+   </div>
+
+   <div class="progress">
+    <i style="width:${Math.min(100,xp/next*100)}%"></i>
+   </div>
+
+   <p class="sub" style="margin-top:12px">
+    Keep customizing your profile,
+    collecting achievements and inviting friends.
+   </p>
+
+  </div>
+
+  <div class="section glass">
+
+   <div class="section-title">
+    <h3>Your badges</h3>
+    <span>${(d.badges||[]).length}</span>
+   </div>
+
+   <div class="badge-list">
+    ${badgeHTML(d)}
+   </div>
+
+  </div>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="section-title">
+   <h3>Quick actions</h3>
+  </div>
+
+  <div class="activity">
+
+   <div onclick="document.querySelector('[data-tab=profile]').click()">
+    <i class="fa-solid fa-user"></i>
+    Edit your profile
+   </div>
+
+   <div onclick="document.querySelector('[data-tab=appearance]').click()">
+    <i class="fa-solid fa-palette"></i>
+    Change your theme
+   </div>
+
+   <div onclick="document.querySelector('[data-tab=music]').click()">
+    <i class="fa-solid fa-music"></i>
+    Configure profile music
+   </div>
+
+   <div onclick="document.querySelector('[data-tab=referrals]').click()">
+    <i class="fa-solid fa-gift"></i>
+    Share your referral code
+   </div>
+
+  </div>
+
+ </div>
+
+ `;
+}
+
+
+/* =========================
+   PROFILE EDITOR
+========================= */
+
+function profileEditor(d){
+
+ return`
+
+ <div class="dash-head">
+
+  <div>
+   <h2>Profile</h2>
+   <p class="sub">
+    Your identity, links and public information.
+   </p>
+  </div>
+
+  <button
+   class="btn primary small"
+   id="saveProfile">
+   Save changes
+  </button>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="avatar-row">
+
+   <img
+    class="avatar"
+    id="avatarPrev"
+    src="${esc(
+     d.pfp ||
+     "https://api.dicebear.com/9.x/shapes/svg?seed="+
+     encodeURIComponent(d.username)
+    )}">
+
+   <div>
+
+    <div class="upload" id="avatarUpload">
+     <i class="fa-solid fa-image"></i>
+     Preview image
+    </div>
+
+    <p class="sub" style="margin-top:7px">
+     Paste a direct image URL below.
+    </p>
+
+   </div>
+
+  </div>
+
+  <label>Avatar URL</label>
+
+  <input
+   id="pfp"
+   value="${esc(d.pfp||"")}"
+   placeholder="https://...">
+
+  <label>Banner URL</label>
+
+  <input
+   id="banner"
+   value="${esc(d.banner||"")}"
+   placeholder="https://...">
+
+  <label>Display status</label>
+
+  <input
+   id="status"
+   maxlength="80"
+   value="${esc(d.status||"")}"
+   placeholder="building something cool...">
+
+  <label>Bio</label>
+
+  <textarea
+   id="bio"
+   maxlength="240"
+   placeholder="Tell people about yourself">${esc(d.bio||"")}</textarea>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="section-title">
+
+   <h3>Links</h3>
+
+   <button
+    class="btn small"
+    id="addLink">
+    <i class="fa-solid fa-plus"></i>
+    Add
+   </button>
+
+  </div>
+
+  <div id="linkRows">
+   ${(d.links||[])
+    .map(l=>linkRow(l.title,l.url))
+    .join("")}
+  </div>
+
+ </div>
+
+ `;
+}
+
+
+function linkRow(t,u){
+
+ return`
+
+ <div class="link-row">
+
+  <input
+   class="lt"
+   placeholder="Label"
+   value="${esc(t||"")}">
+
+  <input
+   class="lu"
+   placeholder="https://..."
+   value="${esc(u||"")}">
+
+  <button
+   class="btn iconbtn small removeLink">
+   <i class="fa-solid fa-xmark"></i>
+  </button>
+
+ </div>
+
+ `;
+}
+
+
+/* =========================
+   APPEARANCE
+========================= */
+
+function appearanceEditor(d){
+
+ return`
+
+ <div class="dash-head">
+
+  <div>
+   <h2>Appearance</h2>
+   <p class="sub">
+    Make your page feel unmistakably yours.
+   </p>
+  </div>
+
+  <button
+   class="btn primary small"
+   id="saveAppearance">
+   Save
+  </button>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="section-title">
+   <h3>Theme</h3>
+   <span>${themes.length} presets</span>
+  </div>
+
+  <div class="swatches">
+
+   ${themes.map(t=>`
+
+    <button
+     class="swatch ${d.theme===t.id?'active':''}"
+     title="${t.name}"
+     data-theme="${t.id}"
+     style="background:linear-gradient(135deg,${t.a},${t.b})">
+    </button>
+
+   `).join("")}
+
+  </div>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="section-title">
+   <h3>Effects</h3>
+   <span>cosmetic</span>
+  </div>
+
+  <label style="display:flex;justify-content:space-between;align-items:center;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text)">
+   Animated particles
+   <input
+    id="particles"
+    type="checkbox"
+    ${d.effects?.particles!==false?"checked":""}
+    style="width:auto">
+  </label>
+
+  <label style="display:flex;justify-content:space-between;align-items:center;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text)">
+   Avatar glow
+   <input
+    id="glow"
+    type="checkbox"
+    ${d.effects?.avatarGlow!==false?"checked":""}
+    style="width:auto">
+  </label>
+
+  <label style="display:flex;justify-content:space-between;align-items:center;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text)">
+   Animated username
+   <input
+    id="animatedName"
+    type="checkbox"
+    ${d.customFeatures?.animatedName?"checked":""}
+    style="width:auto">
+  </label>
+
+ </div>
+
+ `;
+}
+
+
+/* =========================
+   MUSIC
+========================= */
+
+function musicEditor(d){
+
+ return`
+
+ <div class="dash-head">
+
+  <div>
+   <h2>Profile music</h2>
+   <p class="sub">
+    Add a track to your public profile.
+   </p>
+  </div>
+
+  <button
+   class="btn primary small"
+   id="saveMusic">
+   Save
+  </button>
+
+ </div>
+
+ <div class="section glass">
+
+  <label>Audio URL</label>
+
+  <input
+   id="musicUrl"
+   value="${esc(d.music?.url||"")}"
+   placeholder="Direct .mp3 / audio file URL">
+
+  <div class="field-row">
+
+   <div>
+
+    <label>Track title</label>
+
+    <input
+     id="musicTitle"
+     value="${esc(d.music?.title||"")}"
+     placeholder="After Dark">
+
+   </div>
+
+   <div>
+
+    <label>Artist</label>
+
+    <input
+     id="musicArtist"
+     value="${esc(d.music?.artist||"")}"
+     placeholder="Artist">
+
+   </div>
+
+  </div>
+
+  <label style="display:flex;justify-content:space-between;align-items:center;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text)">
+   Loop
+   <input
+    id="musicLoop"
+    type="checkbox"
+    ${d.music?.loop!==false?"checked":""}
+    style="width:auto">
+  </label>
+
+  <p class="sub" style="margin-top:14px">
+   Browsers may block autoplay with sound.
+   Visitors can press play if autoplay is unavailable.
+  </p>
+
+ </div>
+
+ `;
+}
+
+
+/* =========================
+   BADGES
+========================= */
+
+function badgesEditor(d){
+
+ return`
+
+ <div class="dash-head">
+
+  <div>
+   <h2>Badges</h2>
+   <p class="sub">
+    Collect cosmetic achievements as your account grows.
+   </p>
+  </div>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="section-title">
+   <h3>Unlocked</h3>
+   <span>${(d.badges||[]).length}</span>
+  </div>
+
+  <div class="badge-list">
+   ${badgeHTML(d)}
+  </div>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="section-title">
+   <h3>Achievements</h3>
+  </div>
+
+  <div class="activity">
+
+   <div>
+    <i class="fa-solid fa-lock"></i>
+    Recruiter — refer 25 users
+   </div>
+
+   <div>
+    <i class="fa-solid fa-lock"></i>
+    Popular — reach 1,000 profile views
+   </div>
+
+   <div>
+    <i class="fa-solid fa-lock"></i>
+    Creator — add 10 profile links
+   </div>
+
+   <div>
+    <i class="fa-solid fa-lock"></i>
+    Music Lover — add profile music
+   </div>
+
+   <div>
+    <i class="fa-solid fa-lock"></i>
+    Legend — reach level 25
+   </div>
+
+  </div>
+
+ </div>
+
+ `;
+}
+
+
+/* =========================
+   REFERRALS
+========================= */
+
+function referralEditor(d){
+
+ let code=d.referralCode||makeCode(d.username);
+
+ if(!d.referralCode){
+  save({referralCode:code}).catch(console.warn);
+ }
+
+ return`
+
+ <div class="dash-head">
+
+  <div>
+   <h2>Referrals</h2>
+   <p class="sub">
+    Invite friends and earn cosmetic progression.
+   </p>
+  </div>
+
+ </div>
+
+ <div class="section glass">
+
+  <label>Your referral code</label>
+
+  <div class="row">
+
+   <div
+    class="refcode"
+    style="flex:1">
+    ${esc(code)}
+   </div>
+
+   <button
+    class="btn primary"
+    id="copyRef">
+    <i class="fa-solid fa-copy"></i>
+    Copy
+   </button>
+
+  </div>
+
+  <p class="sub" style="margin-top:10px">
+   Share
+   <b>/?ref=${encodeURIComponent(code)}</b>
+   with friends.
+  </p>
+
+ </div>
+
+ <div class="stats">
+
+  <div class="stat glass">
+   <small>Successful referrals</small>
+   <strong>${d.stats?.referrals||0}</strong>
+  </div>
+
+  <div class="stat glass">
+   <small>Referral XP</small>
+   <strong>${(d.stats?.referrals||0)*500}</strong>
+  </div>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="section-title">
+   <h3>Milestones</h3>
+  </div>
+
+  <div class="activity">
+
+   <div>
+    <i class="fa-solid fa-1"></i>
+    1 referral → 100 XP
+   </div>
+
+   <div>
+    <i class="fa-solid fa-5"></i>
+    5 referrals → Referral badge
+   </div>
+
+   <div>
+    <i class="fa-solid fa-10"></i>
+    10 referrals → premium theme
+   </div>
+
+   <div>
+    <i class="fa-solid fa-25"></i>
+    25 referrals → animated effect
+   </div>
+
+  </div>
+
+ </div>
+
+ `;
+}
+
+
+/* =========================
+   ANALYTICS
+========================= */
+
+function analyticsEditor(d){
+
+ return`
+
+ <div class="dash-head">
+
+  <div>
+   <h2>Analytics</h2>
+   <p class="sub">
+    Simple profile activity at a glance.
+   </p>
+  </div>
+
+ </div>
+
+ <div class="stats">
+
+  <div class="stat glass">
+   <small>Total views</small>
+   <strong>${(d.stats?.views||0).toLocaleString()}</strong>
+  </div>
+
+  <div class="stat glass">
+   <small>Total likes</small>
+   <strong>${d.stats?.likes||0}</strong>
+  </div>
+
+  <div class="stat glass">
+   <small>Links</small>
+   <strong>${(d.links||[]).length}</strong>
+  </div>
+
+  <div class="stat glass">
+   <small>Referrals</small>
+   <strong>${d.stats?.referrals||0}</strong>
+  </div>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="section-title">
+   <h3>Profile health</h3>
+  </div>
+
+  <div class="activity">
+
+   <div>
+    <i class="fa-solid fa-circle-check"></i>
+    Username configured
+   </div>
+
+   <div>
+    <i class="fa-solid fa-circle-check"></i>
+    Public profile active
+   </div>
+
+   <div>
+    <i class="fa-solid fa-circle-${d.music?.url?'check':'exclamation'}"></i>
+    ${d.music?.url?'Music configured':'Add profile music'}
+   </div>
+
+   <div>
+    <i class="fa-solid fa-circle-${(d.links||[]).length?'check':'exclamation'}"></i>
+    ${(d.links||[]).length} link(s) published
+   </div>
+
+  </div>
+
+ </div>
+
+ `;
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+function settingsEditor(d){
+
+ return`
+
+ <div class="dash-head">
+
+  <div>
+   <h2>Settings</h2>
+   <p class="sub">
+    Account and VYRO preferences.
+   </p>
+  </div>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="section-title">
+   <h3>Account</h3>
+  </div>
+
+  <div class="activity">
+
+   <div>
+    <i class="fa-solid fa-id-card"></i>
+    Username:
+    <b>${esc(d.username)}</b>
+   </div>
+
+   <div>
+    <i class="fa-solid fa-fingerprint"></i>
+    Account ID:
+    <b>${esc(user?.id||"unknown")}</b>
+   </div>
+
+   <div>
+    <i class="fa-solid fa-calendar"></i>
+    VYRO account created
+   </div>
+
+  </div>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="section-title">
+   <h3>Preferences</h3>
+  </div>
+
+  <label style="display:flex;justify-content:space-between;align-items:center;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text)">
+   Reduce animations
+   <input
+    id="reduceMotion"
+    type="checkbox"
+    style="width:auto">
+  </label>
+
+  <label style="display:flex;justify-content:space-between;align-items:center;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text)">
+   Profile effects
+   <input
+    id="profileEffects"
+    type="checkbox"
+    checked
+    style="width:auto">
+  </label>
+
+ </div>
+
+ <div class="section glass">
+
+  <div class="section-title">
+
+   <div>
+    <h3>Developer / Administration</h3>
+    <span>Restricted area</span>
+   </div>
+
+  </div>
+
+  <p class="sub" style="margin-bottom:15px">
+   Administrative tools are hidden behind an additional
+   authentication prompt.
+  </p>
+
+  <button
+   class="btn warn"
+   id="adminAccess">
+   <i class="fa-solid fa-shield-halved"></i>
+   Administrative Panel
+  </button>
+
+ </div>
+
+ `;
+}
+
+
+/* =========================
+   TAB BINDINGS
+========================= */
+
+function bindTab(tab,d){
+
+ if(tab==="profile"){
+
+  document.getElementById("pfp").oninput=e=>{
+
+   const v=e.target.value.trim();
+
+   if(/^https?:\/\//i.test(v))
+    document.getElementById("avatarPrev").src=v;
+
+  };
+
+
+  document
+   .getElementById("avatarUpload")
+   .onclick=()=>{
+
+    const input=document.createElement("input");
+
+    input.type="file";
+    input.accept="image/*";
+
+    input.onchange=()=>{
+
+     const f=input.files?.[0];
+
+     if(!f)return;
+
+     const r=new FileReader();
+
+     r.onload=()=>{
+
+      document.getElementById("avatarPrev").src=
+       r.result;
+
+      toast(
+       "Local preview only — paste a hosted URL to save it"
+      );
+
+     };
+
+     r.readAsDataURL(f);
+
+   };
+
+   input.click();
+
+  };
+
+
+  document
+   .getElementById("addLink")
+   .onclick=()=>{
+
+    document
+     .getElementById("linkRows")
+     .insertAdjacentHTML(
+      "beforeend",
+      linkRow("","")
+     );
+
+   };
+
+
+  document
+   .getElementById("linkRows")
+   .onclick=e=>{
+
+    const b=e.target.closest(".removeLink");
+
+    if(b)
+     b.parentElement.remove();
+
+  };
+
+
+  document
+   .getElementById("saveProfile")
+   .onclick=async()=>{
+
+    const links=[
+     ...document.querySelectorAll(".link-row")
+    ]
+    .map(r=>({
+     title:r.querySelector(".lt").value.trim(),
+     url:r.querySelector(".lu").value.trim()
+    }))
+    .filter(x=>/^https?:\/\//i.test(x.url));
+
+
+    await save({
+
+     bio:
+      document
+       .getElementById("bio")
+       .value
+       .trim(),
+
+     pfp:
+      document
+       .getElementById("pfp")
+       .value
+       .trim(),
+
+     banner:
+      document
+       .getElementById("banner")
+       .value
+       .trim(),
+
+     status:
+      document
+       .getElementById("status")
+       .value
+       .trim(),
+
+     links,
+
+     xp:increment(50)
+
+    });
+
+
+    toast("Profile saved ✦");
+
+    dashboard();
+
+   };
+
+ }
+
+
+ if(tab==="appearance"){
+
+  document
+   .querySelectorAll(".swatch")
+   .forEach(x=>{
+
+    x.onclick=()=>{
+
+     document
+      .querySelectorAll(".swatch")
+      .forEach(y=>
+       y.classList.remove("active")
+      );
+
+     x.classList.add("active");
+
+     d.theme=x.dataset.theme;
+
+     applyTheme(d.theme);
+
+    };
+
+   });
+
+
+  document
+   .getElementById("saveAppearance")
+   .onclick=async()=>{
+
+    await save({
+
+     theme:d.theme,
+
+     effects:{
+      particles:
+       document.getElementById("particles").checked,
+
+      avatarGlow:
+       document.getElementById("glow").checked
+     },
+
+     customFeatures:{
+      ...(d.customFeatures||{}),
+      animatedName:
+       document.getElementById("animatedName").checked
+     }
+
+    });
+
+    toast("Appearance saved");
+
+    dashboard();
+
+   };
+
+ }
+
+
+ if(tab==="music"){
+
+  document
+   .getElementById("saveMusic")
+   .onclick=async()=>{
+
+    await save({
+
+     music:{
+      url:
+       document
+        .getElementById("musicUrl")
+        .value
+        .trim(),
+
+      title:
+       document
+        .getElementById("musicTitle")
+        .value
+        .trim(),
+
+      artist:
+       document
+        .getElementById("musicArtist")
+        .value
+        .trim(),
+
+      loop:
+       document
+        .getElementById("musicLoop")
+        .checked,
+
+      autoplay:false
+     }
+
+    });
+
+    toast("Music saved");
+
+    dashboard();
+
+   };
+
+ }
+
+
+ if(tab==="referrals"){
+
+  document
+   .getElementById("copyRef")
+   .onclick=async()=>{
+
+    const value=d.referralCode||"";
+
+    try{
+
+     if(navigator.clipboard?.writeText){
+
+      await navigator.clipboard.writeText(value);
+
+     }else{
+
+      const t=document.createElement("textarea");
+
+      t.value=value;
+
+      document.body.appendChild(t);
+
+      t.select();
+
+      document.execCommand("copy");
+
+      t.remove();
+
+     }
+
+     toast("Referral code copied");
+
+    }catch{
+
+     toast("Copy failed");
+
+    }
+
+   };
+
+ }
+
+
+ if(tab==="settings"){
+
+  document
+   .getElementById("adminAccess")
+   .onclick=openAdminLogin;
+
+ }
+
+}
+
+
+/* =========================
+   ADMIN LOGIN
+========================= */
+
+function openAdminLogin(){
+
+ const modal=document.createElement("div");
+
+ modal.className="modal";
+
+ modal.innerHTML=`
+
+ <div class="modal-card glass">
+
+  <div class="modal-head">
+
+   <h2>
+    <i class="fa-solid fa-shield-halved"
+       style="color:#fbbf24"></i>
+    Restricted Area
+   </h2>
+
+   <button class="btn iconbtn"
+    data-close>
+    <i class="fa-solid fa-xmark"></i>
+   </button>
+
+  </div>
+
+  <p class="sub">
+   Enter the administrator credentials to
+   continue.
+  </p>
+
+  <label>Username</label>
+
+  <input
+   id="adminUser"
+   autocomplete="off"
+   placeholder="Administrator username">
+
+  <label>Password</label>
+
+  <input
+   id="adminPass"
+   type="password"
+   placeholder="Administrator password">
+
+  <div
+   id="adminLoginStatus"
+   class="status">
+  </div>
+
+  <button
+   class="btn primary"
+   id="adminLoginBtn"
+   style="width:100%;margin-top:14px">
+
+   <i class="fa-solid fa-lock-open"></i>
+   Authenticate
+
+  </button>
+
+ </div>
+ `;
+
+ document.body.appendChild(modal);
+
+ modal.querySelector("[data-close]")
+  .onclick=()=>modal.remove();
+
+ modal.querySelector("#adminLoginBtn")
+  .onclick=()=>{
+
+   const u=
+    modal.querySelector("#adminUser").value;
+
+   const p=
+    modal.querySelector("#adminPass").value;
+
+   const status=
+    modal.querySelector("#adminLoginStatus");
+
+
+   /*
+    DEMO-ONLY ADMIN LOGIN
+
+    This is intentionally client-side because
+    the supplied project is a static frontend.
+
+    Do NOT use this authentication design for
+    real privileged production access.
+   */
+
+   if(
+    u==="shark" &&
+    p==="September11,2001"
+   ){
+
+    adminSession=true;
+
+    modal.remove();
+
+    toast("Administrator authenticated");
+
+    openAdminPanel();
+
+   }else{
+
+    status.textContent=
+     "Invalid administrator credentials.";
+
+    status.className="status bad";
+
+   }
+
+  };
+
+}
+
+
+/* =========================
+   ADMIN PANEL
+========================= */
+
+function openAdminPanel(){
+
+ if(!adminSession){
+  openAdminLogin();
+  return;
+ }
+
+ const c=document.getElementById("dashContent");
+
+ c.innerHTML=`
+
+ <div class="dash-head">
+
+  <div>
+
+   <h2>
+    <i class="fa-solid fa-shield-halved"
+       style="color:#fbbf24"></i>
+    Administration
+   </h2>
+
+   <p class="sub">
+    VYRO administrative control center.
+   </p>
+
+  </div>
+
+  <button
+   class="btn small danger"
+   id="adminLogout">
+
+   <i class="fa-solid fa-lock"></i>
+   Lock panel
+
+  </button>
+
+ </div>
+
+ <div class="admin-header">
+
+  <strong>
+   Administrator mode enabled
+  </strong>
+
+  <p class="sub" style="margin-top:5px">
+   Changes made here modify VYRO profile data.
+  </p>
+
+ </div>
+
+ <div class="admin-grid">
+
+  <div class="section glass">
+
+   <div class="section-title">
+    <h3>User management</h3>
+   </div>
+
+   <label>Search username</label>
+
+   <input
+    id="adminSearch"
+    placeholder="Search VYRO users..."
+    autocomplete="off">
+
+   <div id="adminResults"></div>
+
+  </div>
+
+  <div class="section glass">
+
+   <div class="section-title">
+    <h3>Admin tools</h3>
+   </div>
+
+   <div class="activity">
+
+    <div>
+     <i class="fa-solid fa-user-shield"></i>
+     Manage badges
+    </div>
+
+    <div>
+     <i class="fa-solid fa-wand-magic-sparkles"></i>
+     Unlock custom cosmetics
+    </div>
+
+    <div>
+     <i class="fa-solid fa-star"></i>
+     Modify XP and levels
+    </div>
+
+    <div>
+     <i class="fa-solid fa-palette"></i>
+     Grant premium themes
+    </div>
+
+   </div>
+
+  </div>
+
+ </div>
+
+ <div
+  id="adminEditor"
+  class="section glass hidden">
+ </div>
+
+ `;
+
+
+ document
+  .getElementById("adminLogout")
+  .onclick=()=>{
+
+   adminSession=false;
+
+   toast("Admin panel locked");
+
+   renderTab("settings",window.__currentProfile);
+
+  };
+
+
+ const search=
+  document.getElementById("adminSearch");
+
+
+ search.oninput=async()=>{
+
+  const value=
+   search.value.trim().toLowerCase();
+
+  const results=
+   document.getElementById("adminResults");
+
+  if(value.length<2){
+
+   results.innerHTML=
+    '<p class="sub" style="margin-top:12px">Type at least 2 characters.</p>';
+
+   return;
+
+  }
+
+  try{
+
+   const snap=await getDocs(
+    collection(requireDb(),"users")
+   );
+
+   const users=snap.docs
+    .map(x=>({
+     id:x.id,
+     ...x.data()
+    }))
+    .filter(x=>
+     String(x.username||"")
+      .toLowerCase()
+      .includes(value)
+    )
+    .slice(0,12);
+
+
+   if(!users.length){
+
+    results.innerHTML=
+     '<p class="sub" style="margin-top:12px">No users found.</p>';
+
+    return;
+
+   }
+
+
+   results.innerHTML=users.map(x=>`
+
+    <div class="user-result">
+
+     <div class="user-result-main">
+
+      <img src="${esc(
+       x.pfp ||
+       "https://api.dicebear.com/9.x/shapes/svg?seed="+
+       encodeURIComponent(x.username)
+      )}">
+
+      <div class="user-result-name">
+
+       <b>${esc(x.username)}</b>
+
+       <span>
+        Level ${x.level||1}
+        · ${(x.badges||[]).length} badges
+       </span>
+
+      </div>
+
+     </div>
+
+     <button
+      class="btn small"
+      data-admin-user="${esc(x.id)}">
+
+      Manage
+
+     </button>
+
+    </div>
+
+   `).join("");
+
+
+   results
+    .querySelectorAll("[data-admin-user]")
+    .forEach(btn=>{
+
+     btn.onclick=()=>{
+
+      const target=
+       users.find(x=>
+        x.id===btn.dataset.adminUser
+       );
+
+      if(target)
+       adminEditUser(target);
+
+     };
+
+    });
+
+
+  }catch(e){
+
+   results.innerHTML=
+    '<p class="sub bad">Could not load users.</p>';
+
+  }
+
+ };
+
+}
+
+
+window.adminEditUser=adminEditUser;
+
+
+/* =========================
+   ADMIN USER EDITOR
+========================= */
+
+function adminEditUser(target){
+
+ if(!adminSession){
+  toast("Admin session expired");
+  return;
+ }
+
+ const editor=
+  document.getElementById("adminEditor");
+
+ if(!editor)return;
+
+ const currentBadges=
+  target.badges||[];
+
+ editor.classList.remove("hidden");
+
+ editor.innerHTML=`
+
+ <div class="section-title">
+
+  <div>
+
+   <h3>
+    Managing @${esc(target.username)}
+   </h3>
+
+   <span>
+    ${esc(target.ownerId||target.id)}
+   </span>
+
+  </div>
+
+  <button
+   class="btn iconbtn"
+   id="closeAdminEditor">
+
+   <i class="fa-solid fa-xmark"></i>
+
+  </button>
+
+ </div>
+
+
+ <div class="admin-grid">
+
+  <div>
+
+   <label>XP</label>
+
+   <input
+    id="adminXP"
+    type="number"
+    value="${Number(target.xp||0)}">
+
+  </div>
+
+  <div>
+
+   <label>Level</label>
+
+   <input
+    id="adminLevel"
+    type="number"
+    value="${Number(target.level||1)}">
+
+  </div>
+
+ </div>
+
+
+ <label>Custom status</label>
+
+ <input
+  id="adminStatus"
+  value="${esc(target.status||"")}"
+  placeholder="Admin-set profile status">
+
+
+ <label>Badges</label>
+
+ <div
+  id="adminBadgeList"
+  class="badge-list"
+  style="margin-bottom:14px">
+
+  ${Object.entries(BADGES).map(([id,b])=>`
+
+   <button
+    class="badge ${b[2]||""}"
+    data-badge="${id}"
+    style="cursor:pointer">
+
+    <i class="fa-solid ${b[0]}"></i>
+
+    ${esc(b[1])}
+
+    <span>
+     ${currentBadges.includes(id)?"✓":"+"}
+    </span>
+
+   </button>
+
+  `).join("")}
+
+ </div>
+
+
+ <div class="section" style="padding:0;margin-top:18px">
+
+  <div class="section-title">
+   <h3>Custom profile features</h3>
+  </div>
+
+  <div class="custom-feature">
+
+   <strong>
+    Animated username
+   </strong>
+
+   <span>
+    Gives the profile name a special animated treatment.
+   </span>
+
+   <label style="display:flex;justify-content:space-between;align-items:center;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text)">
+    Enabled
+    <input
+     id="featureAnimatedName"
+     type="checkbox"
+     ${target.customFeatures?.animatedName?"checked":""}
+     style="width:auto">
+   </label>
+
+  </div>
+
+
+  <div class="custom-feature">
+
+   <strong>
+    Special profile card
+   </strong>
+
+   <span>
+    Enables special profile cosmetics.
+   </span>
+
+   <label style="display:flex;justify-content:space-between;align-items:center;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text)">
+    Enabled
+    <input
+     id="featureCard"
+     type="checkbox"
+     ${target.customFeatures?.specialCard?"checked":""}
+     style="width:auto">
+   </label>
+
+  </div>
+
+
+  <div class="custom-feature">
+
+   <strong>
+    Profile glow
+   </strong>
+
+   <span>
+    Allows enhanced avatar/profile lighting.
+   </span>
+
+   <label style="display:flex;justify-content:space-between;align-items:center;text-transform:none;letter-spacing:0;font-size:13px;color:var(--text)">
+    Enabled
+    <input
+     id="featureGlow"
+     type="checkbox"
+     ${target.customFeatures?.profileGlow!==false?"checked":""}
+     style="width:auto">
+   </label>
+
+  </div>
+
+ </div>
+
+
+ <button
+  class="btn primary"
+  id="adminSaveUser"
+  style="width:100%;margin-top:16px">
+
+  <i class="fa-solid fa-floppy-disk"></i>
+  Save administrator changes
+
+ </button>
+
+ `;
+
+
+ let selected=
+  new Set(currentBadges);
+
+
+ editor
+  .querySelectorAll("[data-badge]")
+  .forEach(btn=>{
+
+   btn.onclick=()=>{
+
+    const id=btn.dataset.badge;
+
+    if(selected.has(id)){
+     selected.delete(id);
+    }else{
+     selected.add(id);
+    }
+
+    btn.querySelector("span").textContent=
+     selected.has(id)?"✓":"+";
+
+   };
+
+  });
+
+
+ document
+  .getElementById("closeAdminEditor")
+  .onclick=()=>{
+
+   editor.classList.add("hidden");
+   editor.innerHTML="";
+
+  };
+
+
+ document
+  .getElementById("adminSaveUser")
+  .onclick=async()=>{
+
+   const customFeatures={
+
+    ...(target.customFeatures||{}),
+
+    animatedName:
+     document
+      .getElementById("featureAnimatedName")
+      .checked,
+
+    specialCard:
+     document
+      .getElementById("featureCard")
+      .checked,
+
+    profileGlow:
+     document
+      .getElementById("featureGlow")
+      .checked
+
+   };
+
+
+   try{
+
+    await setDoc(
+     doc(requireDb(),"users",target.id),
+     {
+
+      xp:Number(
+       document
+        .getElementById("adminXP")
+        .value||0
+      ),
+
+      level:Number(
+       document
+        .getElementById("adminLevel")
+        .value||1
+      ),
+
+      status:
+       document
+        .getElementById("adminStatus")
+        .value
+        .trim(),
+
+      badges:Array.from(selected),
+
+      customFeatures
+
+     },
+     {merge:true}
+    );
+
+
+    toast(
+     `@${target.username} updated`
+    );
+
+
+    editor.classList.add("hidden");
+    editor.innerHTML="";
+
+
+   }catch(e){
+
+    console.error(e);
+
+    toast(
+     "Could not save administrator changes"
+    );
+
+   }
+
+ };
+
+}
+
+
+/* =========================
+   OPEN PROFILE
+========================= */
+
+function openProfile(){
+
+ if(!user)return;
+
+ getDoc(
+  doc(requireDb(),"users",user.id)
+ ).then(s=>{
+
+  if(s.exists())
+   location.hash="#/"+s.data().username;
+
+ });
+
+}
+
+window.openProfile=openProfile;
+window.discordLogin=discordLogin;
+
+
+/* =========================
+   PUBLIC PROFILE
+========================= */
+
+function profile(name){
+
+ navBar();
+
+ getDocs(
+  query(
+   collection(requireDb(),"users"),
+   where("username","==",name)
+  )
+ ).then(async r=>{
+
+  if(r.empty){
+
+   app.innerHTML=`
+
+   <div class="profile-stage">
+
+    <div class="card glass center">
+
+     <h2>Profile not found</h2>
+
+     <p class="sub" style="margin:8px 0 15px">
+      That VYRO username does not exist.
+     </p>
+
+     <button
+      class="btn"
+      onclick="location.hash=''">
+      Go home
+     </button>
+
+    </div>
+
+   </div>
+
+   `;
+
+   return;
+  }
+
+
+  const ref=r.docs[0];
+  const d=ref.data();
+
+  applyTheme(d.theme);
+
+
+  await setDoc(
+   doc(requireDb(),"users",ref.id),
+   {
+    stats:{
+     ...(d.stats||{}),
+     views:(d.stats?.views||0)+1
+    }
+   },
+   {merge:true}
+  );
+
+
+  let audio="";
+
+  if(
+   d.music?.url &&
+   /^https?:\/\//i.test(d.music.url)
+  ){
+
+   audio=`
+
+   <div class="music">
+
+    <div class="music-top">
+
+     <div class="album">
+      <i class="fa-solid fa-music"></i>
+     </div>
+
+     <div class="track">
+
+      <b>
+       ${esc(
+        d.music.title||
+        "Profile soundtrack"
+       )}
+      </b>
+
+      <span>
+       ${esc(
+        d.music.artist||
+        "VYRO music"
+       )}
+      </span>
+
+     </div>
+
+     <button
+      class="btn iconbtn small"
+      id="play">
+
+      <i class="fa-solid fa-play"></i>
+
+     </button>
+
+    </div>
+
+    <input
+     id="seek"
+     type="range"
+     min="0"
+     max="100"
+     value="0">
+
+    <audio
+     id="audio"
+     src="${esc(d.music.url)}"
+     ${d.music.loop!==false?"loop":""}>
+    </audio>
+
+   </div>
+
+   `;
+
+  }
+
+
+  const avatar=
+   d.pfp ||
+   "https://api.dicebear.com/9.x/shapes/svg?seed="+
+   encodeURIComponent(d.username);
+
+
+  app.innerHTML=`
+
+  <div class="profile-stage screen">
+
+   <div class="profile-card glass">
+
+    ${
+     d.banner &&
+     /^https?:\/\//i.test(d.banner)
+     ?`
+      <div
+       class="profile-banner"
+       style="background-image:url('${esc(d.banner)}')">
+      </div>
+     `
+     :""
+    }
+
+    <div class="profile-inner">
+
+     <img
+      class="profile-avatar ${d.customFeatures?.profileGlow!==false?"glow":""}"
+      src="${esc(avatar)}">
+
+
+     <div
+      class="profile-name"
+      style="${d.customFeatures?.animatedName?'animation:float 2.5s ease-in-out infinite':''}">
+
+      ${esc(d.username)}
+
+     </div>
+
+
+     <div class="handle">
+      @${esc(d.username)}
+     </div>
+
+
+     ${
+      d.status
+      ?`
+       <div class="profile-status">
+        <i class="fa-solid fa-circle"
+           style="font-size:6px;color:#4ade80"></i>
+        ${esc(d.status)}
+       </div>
+      `
+      :""
+     }
+
+
+     <div class="badges">
+      ${badgeHTML(d)}
+     </div>
+
+
+     ${
+      d.bio
+      ?`
+       <div class="profile-bio">
+        ${esc(d.bio)}
+       </div>
+      `
+      :""
+     }
+
+
+     ${audio}
+
+
+     <div class="profile-links">
+
+      ${
+       (d.links||[])
+       .filter(x=>
+        /^https?:\/\//i.test(x.url||"")
+       )
+       .map(x=>`
+
+        <a
+         href="${esc(x.url)}"
+         target="_blank"
+         rel="noopener noreferrer">
+
+         <i class="${icon(x.url)}"></i>
+
+         ${esc(x.title||x.url)}
+
+        </a>
+
+       `).join("")
+       ||
+       '<div class="sub">No links added yet.</div>'
+      }
+
+     </div>
+
+
+     <div class="views">
+
+      <span>
+       <i class="fa-solid fa-eye"></i>
+       ${(d.stats?.views||0)+1}
+       views
+      </span>
+
+      <span>
+       <i class="fa-solid fa-heart"></i>
+       ${d.stats?.likes||0}
+      </span>
+
+     </div>
+
+
+     <div class="profile-footer">
+
+      made with VYRO ·
+
+      <a
+       href="#"
+       onclick="event.preventDefault();location.hash=''"
+       style="color:inherit">
+
+       create yours
+
+      </a>
+
+     </div>
+
+    </div>
+
+   </div>
+
+  </div>
+
+  `;
+
+
+  if(d.music?.url){
+
+   const a=document.getElementById("audio");
+   const p=document.getElementById("play");
+   const s=document.getElementById("seek");
+
+
+   p.onclick=()=>{
+
+    if(a.paused){
+
+     a.play()
+      .then(()=>{
+
+       p.innerHTML=
+        '<i class="fa-solid fa-pause"></i>';
+
+      })
+      .catch(()=>{
+
+       toast("Press play to start audio");
+
+      });
+
+    }else{
+
+     a.pause();
+
+     p.innerHTML=
+      '<i class="fa-solid fa-play"></i>';
+
+    }
+
+   };
+
+
+   a.ontimeupdate=()=>{
+
+    if(a.duration)
+     s.value=
+      a.currentTime/
+      a.duration*
+      100;
+
+   };
+
+
+   s.oninput=()=>{
+
+    if(a.duration)
+     a.currentTime=
+      s.value/100*a.duration;
+
+   };
+
+  }
+
+ }).catch(()=>{
+
+  toast("Could not load profile");
+
+ });
+
+}
+
+
+/* =========================
+   DEMO
+========================= */
+
+function renderDemo(){
+
+ navBar();
+
+ const d={
+
+  username:"demo",
+
+  bio:
+   "A polished VYRO demo profile — explore the layout, music player, badges and links.",
+
+  status:
+   "building something cool",
+
+  theme:"aurora",
+
+  pfp:
+   "https://api.dicebear.com/9.x/shapes/svg?seed=VYRODemo",
+
+  badges:[
+   "welcome",
+   "verified",
+   "developer",
+   "creator"
+  ],
+
+  links:[
+   {
+    title:"VYRO Website",
+    url:"https://example.com"
+   },
+   {
+    title:"GitHub",
+    url:"https://github.com"
+   },
+   {
+    title:"Discord",
+    url:"https://discord.com"
+   }
+  ],
+
+  stats:{
+   views:1284,
+   likes:86
+  },
+
+  customFeatures:{
+   profileGlow:true,
+   animatedName:true
+  },
+
+  music:{
+   url:
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+   title:"Demo soundtrack",
+   artist:"SoundHelix",
+   loop:true
+  }
+
+ };
+
+
+ applyTheme(d.theme);
+
+
+ const audio=`
+
+ <div class="music">
+
+  <div class="music-top">
+
+   <div class="album">
+    <i class="fa-solid fa-music"></i>
+   </div>
+
+   <div class="track">
+
+    <b>${esc(d.music.title)}</b>
+
+    <span>${esc(d.music.artist)}</span>
+
+   </div>
+
+   <button
+    class="btn iconbtn small"
+    id="play">
+
+    <i class="fa-solid fa-play"></i>
+
+   </button>
+
+  </div>
+
+  <input
+   id="seek"
+   type="range"
+   min="0"
+   max="100"
+   value="0">
+
+  <audio
+   id="audio"
+   src="${esc(d.music.url)}"
+   loop>
+  </audio>
+
+ </div>
+
+ `;
+
+
+ app.innerHTML=`
+
+ <div class="profile-stage screen">
+
+  <div class="profile-card glass">
+
+   <div class="profile-inner">
+
+    <img
+     class="profile-avatar glow"
+     src="${esc(d.pfp)}">
+
+
+    <div
+     class="profile-name"
+     style="animation:float 2.5s ease-in-out infinite">
+
+     ${esc(d.username)}
+
+    </div>
+
+
+    <div class="handle">
+     @${esc(d.username)}
+    </div>
+
+
+    <div class="profile-status">
+
+     <i
+      class="fa-solid fa-circle"
+      style="font-size:6px;color:#4ade80">
+     </i>
+
+     ${esc(d.status)}
+
+    </div>
+
+
+    <div class="badges">
+     ${badgeHTML(d)}
+    </div>
+
+
+    <div class="profile-bio">
+     ${esc(d.bio)}
+    </div>
+
+
+    ${audio}
+
+
+    <div class="profile-links">
+
+     ${d.links.map(x=>`
+
+      <a
+       href="${esc(x.url)}"
+       target="_blank"
+       rel="noopener noreferrer">
+
+       <i class="${icon(x.url)}"></i>
+
+       ${esc(x.title)}
+
+      </a>
+
+     `).join("")}
+
+    </div>
+
+
+    <div class="views">
+
+     <span>
+      <i class="fa-solid fa-eye"></i>
+      ${d.stats.views.toLocaleString()}
+      views
+     </span>
+
+     <span>
+      <i class="fa-solid fa-heart"></i>
+      ${d.stats.likes}
+     </span>
+
+    </div>
+
+
+    <div class="profile-footer">
+
+     VYRO demo ·
+
+     <a
+      href="#"
+      onclick="event.preventDefault();location.hash=''"
+      style="color:inherit">
+
+      create yours
+
+     </a>
+
+    </div>
+
+   </div>
+
+  </div>
+
+ </div>
+
+ `;
+
+
+ const a=document.getElementById("audio");
+ const play=document.getElementById("play");
+ const seek=document.getElementById("seek");
+
+
+ play.onclick=()=>{
+
+  if(a.paused){
+
+   a.play()
+    .then(()=>{
+
+     play.innerHTML=
+      '<i class="fa-solid fa-pause"></i>';
+
+    })
+    .catch(()=>toast("Audio could not be played"));
+
+  }else{
+
+   a.pause();
+
+   play.innerHTML=
+    '<i class="fa-solid fa-play"></i>';
+
+  }
+
+ };
+
+
+ a.ontimeupdate=()=>{
+
+  if(
+   Number.isFinite(a.duration) &&
+   a.duration>0
+  ){
+
+   seek.value=
+    a.currentTime/a.duration*100;
+
+  }
+
+ };
+
+
+ seek.oninput=()=>{
+
+  if(
+   Number.isFinite(a.duration) &&
+   a.duration>0
+  ){
+
+   a.currentTime=
+    seek.value/100*a.duration;
+
+  }
+
+ };
+
+}
+
+
+/* =========================
+   ROUTING
+========================= */
+
+const params=
+ new URLSearchParams(location.search);
+
+if(params.get("ref")){
+
+ localStorage.setItem(
+  "vyroReferral",
+  params.get("ref").toUpperCase()
+ );
+
+}
+
+
+function route(){
+
+ const r=
+  decodeURIComponent(
+   location.hash
+    .replace(/^#\/?/,"")
+    .trim()
+  );
+
+
+ if(r==="dashboard"){
+
+  if(user){
+
+   dashboard();
+
+  }else{
+
+   renderHome();
+
+   toast(
+    "Sign in to open your dashboard."
+   );
+
+  }
+
+  return;
+
+ }
+
+
+ if(r==="demo"){
+
+  renderDemo();
+  return;
+
+ }
+
+
+ if(r){
+
+  profile(r);
+  return;
+
+ }
+
+
+ renderHome();
+
+}
+
+
+window.addEventListener(
+ "hashchange",
+ route
+);
+
+route();
+
+
+/* =========================
+   PARTICLES
+========================= */
+
+const canvas=
+ document.getElementById("bg");
+
+const ctx=
+ canvas.getContext("2d");
+
+let pts=[];
+
+
+function resize(){
+
+ canvas.width=innerWidth;
+ canvas.height=innerHeight;
+
+ pts=Array.from(
+  {
+   length:
+    Math.min(
+     150,
+     Math.floor(innerWidth/8)
+    )
+  },
+  ()=>({
+   x:Math.random()*innerWidth,
+   y:Math.random()*innerHeight,
+   r:Math.random()*1.4+.2,
+   v:Math.random()*.25+.04,
+   a:Math.random()*.5+.1
+  })
+ );
+
+}
+
+
+resize();
+
+addEventListener(
+ "resize",
+ resize
+);
+
+
+(function loop(){
+
+ ctx.clearRect(
+  0,
+  0,
+  canvas.width,
+  canvas.height
+ );
+
+ pts.forEach(p=>{
+
+  p.y+=p.v;
+
+  if(p.y>canvas.height)
+   p.y=-2;
+
+  ctx.fillStyle=
+   `rgba(255,255,255,${p.a})`;
+
+  ctx.beginPath();
+
+  ctx.arc(
+   p.x,
+   p.y,
+   p.r,
+   0,
+   Math.PI*2
+  );
+
+  ctx.fill();
+
+ });
+
+ requestAnimationFrame(loop);
+
+})();
+
 </script>
 
 </body>
 </html>
+```
